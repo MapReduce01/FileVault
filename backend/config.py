@@ -1,5 +1,8 @@
 import os
+import dotenv
 
-MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://Jesse:Jesse@cluster0.i3ieb76.mongodb.net/")
+dotenv.load_dotenv()
+
+MONGO_URI = os.getenv("MONGO_URI")
 DB_NAME = "vaultFile"
 SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-key")
