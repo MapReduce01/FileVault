@@ -108,7 +108,7 @@ def generate_download_link(file_meta_id):
 @app.route("/download/<token>", methods=["GET"])
 def download_file(token):
     try:
-        file_id = serializer.loads(token, max_age=10) #10 seconds for test for now
+        file_id = serializer.loads(token, max_age=300)
     except SignatureExpired:
         return jsonify({"error": "Link expired"}), 403
     except BadSignature:
