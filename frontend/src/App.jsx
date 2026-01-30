@@ -8,40 +8,11 @@ export default function App() {
   const [files, setFiles] = useState([]);
   const [page, setPage] = useState(1);
   const [isLastPage, setIsLastPage] = useState(false);
+  const [totalFiles, setTotalFiles] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    const droppedFile = e.dataTransfer.files?.[0];
-    if (!droppedFile) return;
-
-    setFile(droppedFile);
-
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(droppedFile);
-
-    if (fileInputRef.current) {
-      fileInputRef.current.files = dataTransfer.files;
-    }
-  };
 
   const uploadFile = async () => {
     if (!file) return;
@@ -84,6 +55,35 @@ export default function App() {
       window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [uploading]);
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const droppedFile = e.dataTransfer.files?.[0];
+    if (!droppedFile) return;
+
+    setFile(droppedFile);
+
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(droppedFile);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.files = dataTransfer.files;
+    }
+  };
 
   const loadFiles = async () => {
     const limit = 5;
@@ -91,6 +91,7 @@ export default function App() {
       const res = await API.get(`/files?page=${page}&limit=${limit}`);
       setFiles(res.data.files);
       const total = res.data.total;
+      setTotalFiles(total);
       setIsLastPage(page * limit >= total);
     } catch (err) {
       console.error(err);
@@ -150,8 +151,24 @@ export default function App() {
         ))}
       </ul>
 
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <button onClick={() => setPage(page - 1)} disabled={page === 1}> Prev </button>
+        <input 
+          type="number" 
+          value={page} 
+          onChange={(e) => {
+            setPage(e.target.value === '' ? '' : parseInt(e.target.value) || page);
+          }}
+          style={{ 
+            width: '50px', 
+            padding: '4px', 
+            fontSize: '14px',
+            textAlign: 'center',
+            border: '1px solid #eee',
+            borderRadius: '4px'
+          }}
+        />
+        <span style={{ fontSize: '14px' }}> / {Math.ceil(totalFiles / 5) || 1} </span>
         <button onClick={() => setPage(page + 1)} disabled={isLastPage}> Next </button>
       </div>
 
