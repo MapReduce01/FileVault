@@ -1,4 +1,4 @@
-# Filevault
+# File Vault
 
 ## Overview
 
