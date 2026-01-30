@@ -97,28 +97,23 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    loadFiles();
+  }, [page]);
+
   const getDownloadLink = async (id) => {
     const res = await API.post(`/download-link/${id}`);
     window.open(res.data.download_url, "_blank");
   };
 
-  useEffect(() => {
-    loadFiles();
-  }, [page]);
-
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">File Vault</h1>
-      <h4 className="text-xs font-normal mb-4">File Uploader</h4>
-
-      <div className="border p-4 mb-6">
+    <div>
+      <h1>File Vault</h1>
+      <h4>File Uploader</h4>
+      
+      <div>
         <input type="file" ref={fileInputRef} onChange={(e) => setFile(e.target.files[0])} />
-        <button
-          onClick={uploadFile}
-          className="ml-4 px-4 py-2 bg-blue-600 text-white rounded"
-        >
-          Upload
-        </button>
+        <button onClick={uploadFile}> Upload </button>
       </div>
 
       <div
@@ -130,50 +125,34 @@ export default function App() {
           height: "240px",
           marginTop: "8px",
           marginBottom: "32px",
-          border: `2px dashed ${isDragging ? "#2563eb" : "#999"}`,
+          border: `2px dashed ${isDragging ? "#2e98c2" : "#727171"}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: isDragging ? "#2563eb" : "#666",
+          color: isDragging ? "#2e98c2" : "#727171",
           fontSize: "14px",
           fontWeight: "500",
           boxSizing: "border-box",
           userSelect: "none",
+          borderRadius: "16px",
         }}
       >
         {file ? file.name : "Drag & drop file here"}
       </div>
 
-      <h4 className="text-xs font-normal mb-4">File Browser</h4>
+      <h4>File Browser</h4>
 
       <ul>
         {files.map((f) => (
-          <li key={f.id} className="flex justify-between mb-2">
-            <span>{f.filename}</span>
-            <button
-              onClick={() => getDownloadLink(f.id)}
-              className="text-blue-500"
-            >
-              Download
-            </button>
+          <li key={f.id} style={{ marginBottom: '4px' }}>
+          <button onClick={() => getDownloadLink(f.id)}> {f.filename} </button>
           </li>
         ))}
       </ul>
 
-      <div className="mt-4">
-        <button
-          onClick={() => setPage(page - 1)}
-          disabled={page === 1}
-          className="mr-2"
-        >
-          Prev
-        </button>
-        <button
-          onClick={() => setPage(page + 1)}
-          disabled={isLastPage}
-        >
-          Next
-        </button>
+      <div>
+        <button onClick={() => setPage(page - 1)} disabled={page === 1}> Prev </button>
+        <button onClick={() => setPage(page + 1)} disabled={isLastPage}> Next </button>
       </div>
 
       {showModal && createPortal(
@@ -183,21 +162,20 @@ export default function App() {
           alignItems: 'center', justifyContent: 'center', zIndex: 9999
         }}>
           <div style={{
-            background: 'white', padding: '30px', borderRadius: '12px',
+            background: 'white', padding: '30px', borderRadius: '16px',
             width: '300px', textAlign: 'center', color: 'black'
           }}>
             <h2 style={{ margin: '0 0 15px 0' }}>{uploading ? "Uploading..." : "Complete!"}</h2>
-            <div style={{ background: '#eee', height: '10px', borderRadius: '5px', overflow: 'hidden' }}>
-              <div style={{ width: `${progress}%`, background: '#007bff', height: '100%', transition: 'width 0.2s' }} />
+            <div style={{ background: '#eee', height: '10px', borderRadius: '16px', overflow: 'hidden' }}>
+              <div style={{ width: `${progress}%`, background: '#2e98c2', height: '100%', transition: 'width 0.1s' }} />
             </div>
             <p style={{ margin: '10px 0 20px 0', fontWeight: 'bold' }}>{progress}%</p>
-
             <button 
               disabled={uploading}
               onClick={() => { setShowModal(false); setFile(null); }}
               style={{
-                width: '100%', padding: '10px', borderRadius: '6px',
-                backgroundColor: uploading ? '#ccc' : '#007bff',
+                width: '100%', padding: '10px', borderRadius: '16px',
+                backgroundColor: uploading ? '#ccc' : '#2e98c2',
                 color: 'white', border: 'none', cursor: uploading ? 'not-allowed' : 'pointer'
               }}
             >
@@ -207,7 +185,6 @@ export default function App() {
         </div>,
         document.body
       )}
-      
     </div>
   );
 }
