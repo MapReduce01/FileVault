@@ -59,7 +59,7 @@ def upload_file():
         "file_id": file_id,
         "filename": unique_filename,
         "status": "uploaded",
-        "created_at": datetime.datetime.utcnow()
+        "created_at": datetime.datetime.now()
     })
 
     return jsonify({"message": "File uploaded successfully"})
@@ -98,7 +98,7 @@ def generate_download_link(file_meta_id):
     tokens_col.insert_one({
         "token": token,
         "file_id": file_meta["file_id"],
-        "created_at": datetime.datetime.utcnow()
+        "created_at": datetime.datetime.now()
     })
 
     return jsonify({

@@ -110,7 +110,7 @@ export default function App() {
   return (
     <div>
       <h1>File Vault</h1>
-      <h4>File Uploader</h4>
+      <h2 style={{ fontSize: "16px" }}>File Uploader</h2>
       
       <div>
         <input type="file" ref={fileInputRef} onChange={(e) => setFile(e.target.files[0])} />
@@ -141,7 +141,7 @@ export default function App() {
         {file ? file.name : "Drag & drop file here"}
       </div>
 
-      <h4>File Browser</h4>
+      <h2 style={{ fontSize: "16px" }}>File Browser</h2>
 
       <ul>
         {files.map((f) => (
